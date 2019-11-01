@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <group>
+        <item android:id="@+id/menuItemLyrics"
+              android:title="@string/lyrics"
+              android:icon="@drawable/baseline_short_text_white_24"
+              app:showAsAction="ifRoom"
+        />
+        <item android:id="@+id/menuItemThemes"
+              android:title="@string/themes"
+              android:icon="@drawable/baseline_music_note_white_24"
+              app:showAsAction="ifRoom"
+        />
+    </group>
+</menu>
