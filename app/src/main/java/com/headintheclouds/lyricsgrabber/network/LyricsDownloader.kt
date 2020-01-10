@@ -20,8 +20,13 @@ class LyricsDownloader {
     private val backgroundHandler: Handler
 
     private val urls: MutableList<String> = mutableListOf(
-        "http://lyrics.wikia.com/wiki/{{artist}}:{{track}}"
+        "http://lyrics.wikia.com/wiki/" + LyricSourceBase.artistPlaceHolder + ":" + LyricSourceBase.titlePlaceHolder
     )
+
+    private val lyricSources: MutableList<LyricSourceBase> = mutableListOf(
+        LyricSourceWikia()
+    )
+
     private val years: MutableList<Int> = mutableListOf()
 
     init {
@@ -45,12 +50,17 @@ class LyricsDownloader {
             val songDao = db.songDao()
 
             val song = songDao.findSong(artist, track)
-            var res = ""  //: String? = null
+            var res: String  //: String? = null
             var errorString: String? = null
 
-            if (!song.lyrics.isNullOrEmpty()) {
-                song.lyrics.let { s -> res = s!! }
-            } else {
+            if (song.lyrics.isNullOrEmpty()) {
+//                lyricSources.forEach {
+//                    val lyrics = it.downloadLyrics(artist, track)
+//                    if (!lyrics.isNullOrEmpty()){
+//
+//                    }
+//                }
+
                 urls.forEach {
                     try {
                         var url = it
@@ -63,19 +73,20 @@ class LyricsDownloader {
 
                         res = lyricBox.toString() //.replaceBreaks()
 
-                        res = Html.fromHtml(
-                            res.replace("\n", "<br>"),
-                            Html.FROM_HTML_SEPARATOR_LINE_BREAK_BLOCKQUOTE
-                        ).toString()
+                        if (res.isNotEmpty()) {
+                            res = Html.fromHtml(
+                                res.replace("\n", "<br>"),
+                                Html.FROM_HTML_SEPARATOR_LINE_BREAK_BLOCKQUOTE
+                            ).toString()
 
+                            song.artist = artist; song.track = track; song.lyrics = res
+                            songDao.update(song)
+                        }
                     } catch (e: Exception) {
                         errorString = e.toString()
                     }
                 }
             }
-
-            song.artist = artist; song.track = track; song.lyrics = res
-            songDao.update(song)
 
             function(song, errorString)
         }

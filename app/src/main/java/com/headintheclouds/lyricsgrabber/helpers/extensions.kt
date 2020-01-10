@@ -1,6 +1,8 @@
 package com.headintheclouds.lyricsgrabber.helpers
 
-fun String.setArtist(artist: String): String =  this.replace("{{artist}}", artist)
-fun String.setTrack(track: String): String =  this.replace("{{track}}", track)
+import com.headintheclouds.lyricsgrabber.network.LyricSourceBase
+
+fun String.setArtist(artist: String): String =  this.replace(LyricSourceBase.artistPlaceHolder, artist)
+fun String.setTrack(track: String): String =  this.replace(LyricSourceBase.titlePlaceHolder, track)
 fun String.replaceBreaks(): String =  this.replace("<br>", System.getProperty("line.separator")!!)
 
