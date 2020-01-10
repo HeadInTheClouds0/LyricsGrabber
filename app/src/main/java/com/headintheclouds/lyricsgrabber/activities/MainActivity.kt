@@ -18,6 +18,9 @@ import com.headintheclouds.lyricsgrabber.models.AppDatabase
 import com.headintheclouds.lyricsgrabber.models.Song
 import com.headintheclouds.lyricsgrabber.receivers.SpotifyReceiver
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 
 class MainActivity : BaseActivity() {
@@ -62,7 +65,7 @@ class MainActivity : BaseActivity() {
                 song.lyrics = taskEditText.text.toString()
                 mainLyricsTextView.text = song.lyrics
 
-                async {
+                GlobalScope.async {
                     saveSong(song)
                 }
             }
