@@ -16,4 +16,7 @@
     <string name="lyrics">Lyrics</string>
     <string name="Edit">Edit</string>
     <string name="search">Search</string>
+    <string name="prev">Prev</string>
+    <string name="pause">Pause</string>
+    <string name="next">Next</string>
 </resources>

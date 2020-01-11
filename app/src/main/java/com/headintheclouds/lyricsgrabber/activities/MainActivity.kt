@@ -5,9 +5,8 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.net.Uri
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
-import android.view.WindowManager
+import android.os.SystemClock
+import android.view.*
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import com.headintheclouds.lyricsgrabber.network.LyricsDownloader
@@ -18,8 +17,6 @@ import com.headintheclouds.lyricsgrabber.models.AppDatabase
 import com.headintheclouds.lyricsgrabber.models.Song
 import com.headintheclouds.lyricsgrabber.receivers.SpotifyReceiver
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 
@@ -58,8 +55,6 @@ class MainActivity : BaseActivity() {
         val taskEditText = EditText(c)
         taskEditText.setText(song.lyrics)
         val dialog = AlertDialog.Builder(c)
-//            .setTitle(song.artist)
-//            .setMessage(song.track)
             .setView(taskEditText)
             .setPositiveButton(android.R.string.ok) { _, _ ->
                 song.lyrics = taskEditText.text.toString()
@@ -98,7 +93,11 @@ class MainActivity : BaseActivity() {
                 mSong = Song(0, artist, track, "")
                 setTitleSubTitle(track, artist)
                 mainLyricsTextView.post { mainLyricsTextView.text = "" }
-                lyricsDownloader.downloadLyrics(getActivityContext(), artist, track) { song, error ->
+                lyricsDownloader.downloadLyrics(
+                    getActivityContext(),
+                    artist,
+                    track
+                ) { song, error ->
                     mainProgressBar.post { mainProgressBar.hide() }
                     mainLyricsTextView.post {
                         if (error != null) mainLyricsTextView.text = error
@@ -137,5 +136,37 @@ class MainActivity : BaseActivity() {
     override fun onStop() {
         super.onStop()
         unregisterReceiver(spotifyReceiver)
+    }
+
+
+    private fun sendMediaEvent(keycode: Int) {
+        val eventTime = SystemClock.uptimeMillis()
+        val downIntent = Intent(Intent.ACTION_MEDIA_BUTTON, null)
+        val downEvent = KeyEvent(
+            eventTime, eventTime,
+            KeyEvent.ACTION_DOWN, keycode, 0
+        )
+        downIntent.putExtra(Intent.EXTRA_KEY_EVENT, downEvent)
+        sendOrderedBroadcast(downIntent, null)
+
+        val upIntent = Intent(Intent.ACTION_MEDIA_BUTTON, null)
+        val upEvent = KeyEvent(
+            eventTime, eventTime,
+            KeyEvent.ACTION_UP, keycode, 0
+        )
+        upIntent.putExtra(Intent.EXTRA_KEY_EVENT, upEvent)
+        sendOrderedBroadcast(upIntent, null)
+    }
+
+    fun playNextSong(view: View) {
+        sendMediaEvent(KeyEvent.KEYCODE_MEDIA_NEXT)
+    }
+
+    fun playPrevSong(view: View) {
+        sendMediaEvent(KeyEvent.KEYCODE_MEDIA_PREVIOUS)
+    }
+
+    fun pauseSong(view: View) {
+        sendMediaEvent(KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE)
     }
 }

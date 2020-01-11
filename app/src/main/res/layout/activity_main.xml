@@ -27,11 +27,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-                <!--app:subtitle="ganz ganz ganz ganz ganz ganz ganz ganz ganz ganz ganz ganz ganz ganz ganz ganz "-->
-                <!--app:title="ente ente ente ente ente ente ente ente ente ente ente ente ente ente ente "-->
+            <!--app:subtitle="ganz ganz ganz ganz ganz ganz ganz ganz ganz ganz ganz ganz ganz ganz ganz ganz "-->
+            <!--app:title="ente ente ente ente ente ente ente ente ente ente ente ente ente ente ente "-->
 
-                <!--app:subtitleTextAppearance="@style/TextAppearanceSubTitle"-->
-                <!--app:titleTextAppearance="@style/TextAppearanceTitle" />-->
+            <!--app:subtitleTextAppearance="@style/TextAppearanceSubTitle"-->
+            <!--app:titleTextAppearance="@style/TextAppearanceTitle" />-->
 
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -72,12 +72,54 @@
                     android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    />
+                    app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </ScrollView>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <Button
+                android:id="@+id/mainPrevBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/prev"
+                android:onClick="playPrevSong"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/mainPauseBtn"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/mainPauseBtn"
+                android:layout_width="wrap_content"
+                android:onClick="pauseSong"
+                android:layout_height="wrap_content"
+                android:text="@string/pause"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/mainNextBtn"
+                app:layout_constraintStart_toEndOf="@id/mainPrevBtn"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/mainNextBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/next"
+                android:onClick="playNextSong"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/mainPauseBtn"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
