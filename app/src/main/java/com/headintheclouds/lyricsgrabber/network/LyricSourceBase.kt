@@ -26,16 +26,16 @@ abstract class LyricSourceBase {
             Jsoup.connect(sourceUrl.setArtist(songArtist).setTrack(cleanTrackName(songTitle)))
         val doc = connect.get()
         val body = doc.body()
-        var lyricsHtml = getLyricsFromBody(body)
+        var lyricsRes = getLyricsFromBody(body)
 
-        if (lyricsHtml.isNotEmpty()) {
-            lyricsHtml = Html.fromHtml(
-                lyricsHtml.replace("\n", "<br>"),
+        if (lyricsRes.isNotEmpty()) {
+            lyricsRes = Html.fromHtml(
+                lyricsRes.replace("\n", "<br>"),
                 Html.FROM_HTML_SEPARATOR_LINE_BREAK_BLOCKQUOTE
             ).toString()
         }
 
-        return lyricsHtml
+        return lyricsRes
     }
 
     abstract fun getLyricsFromBody(body: Element): String
