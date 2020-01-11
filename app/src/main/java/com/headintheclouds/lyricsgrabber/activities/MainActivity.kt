@@ -38,7 +38,7 @@ class MainActivity : BaseActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         if (item?.itemId == R.id.mainEditLyric) {
-            showAddItemDialog(getActivityContext(), mSong!!)
+            showAddItemDialog(getActivityContext(), mSong)
         } else if (item?.itemId == R.id.mainSearchButton && mSong != null) {
             launchBrowserWithSearch(mSong!!)
         }
@@ -48,26 +48,29 @@ class MainActivity : BaseActivity() {
     private suspend fun saveSong(song: Song) {
         val db = AppDatabase.getInstance(getActivityContext())
         val songDao = db.songDao()
-        songDao.update(song)
+        if (song.uid == 0) songDao.insertAll(song)
+        else songDao.update(song)
     }
 
-    private fun showAddItemDialog(c: Context, song: Song) {
-        val taskEditText = EditText(c)
-        taskEditText.setText(song.lyrics)
-        val dialog = AlertDialog.Builder(c)
-            .setView(taskEditText)
-            .setPositiveButton(android.R.string.ok) { _, _ ->
-                song.lyrics = taskEditText.text.toString()
-                mainLyricsTextView.text = song.lyrics
+    private fun showAddItemDialog(c: Context, song: Song?) {
+        if (song != null) {
+            val taskEditText = EditText(c)
+            taskEditText.setText(song.lyrics)
+            val dialog = AlertDialog.Builder(c)
+                .setView(taskEditText)
+                .setPositiveButton(android.R.string.ok) { _, _ ->
+                    song.lyrics = taskEditText.text.toString()
+                    mainLyricsTextView.text = song.lyrics
 
-                GlobalScope.async {
-                    saveSong(song)
+                    GlobalScope.async {
+                        saveSong(song)
+                    }
                 }
-            }
-            .setNegativeButton(android.R.string.cancel, null)
-            .create()
-        dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
-        dialog.show()
+                .setNegativeButton(android.R.string.cancel, null)
+                .create()
+            dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+            dialog.show()
+        }
     }
 
     private fun launchBrowserWithSearch(song: Song) {
@@ -101,8 +104,10 @@ class MainActivity : BaseActivity() {
                     mainProgressBar.post { mainProgressBar.hide() }
                     mainLyricsTextView.post {
                         if (error != null) mainLyricsTextView.text = error
-                        else mainLyricsTextView.text = song?.lyrics
-                        mSong = song
+                        else {
+                            mainLyricsTextView.text = song?.lyrics
+                            mSong = song
+                        }
                     }
                 }
             }

@@ -44,13 +44,18 @@ class LyricsDownloader {
             var song = songDao.findSong(artist, track)
             var errorString: String? = null
 
-            if (song == null) {
+            if (song == null || song.lyrics.isNullOrEmpty()) {
                 lyricSources.forEach {
                     try {
                         val lyrics = it.downloadLyrics(track, artist)
                         if (lyrics.isNotEmpty()){
-                            song = Song(0, artist, track, lyrics)
-                            songDao.insertAll(song!!)
+                            if (song == null){
+                                song = Song(0, artist, track, lyrics)
+                                songDao.insertAll(song!!)
+                            } else {
+                                song!!.lyrics = lyrics
+                                songDao.update(song!!)
+                            }
                         }
                     } catch (e:Exception) {
                         errorString = e.toString()
