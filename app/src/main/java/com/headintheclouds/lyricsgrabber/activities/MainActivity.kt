@@ -1,8 +1,10 @@
 package com.headintheclouds.lyricsgrabber.activities
 
+import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.media.AudioManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.SystemClock
@@ -118,7 +120,7 @@ class MainActivity : LyricsActivity() {
             if (it.itemId == R.id.menuItemThemes) {
                 drawer_layout_main.closeDrawers()
                 return@setNavigationItemSelectedListener true
-            } else if(it.itemId == R.id.menuItemLyrics) {
+            } else if (it.itemId == R.id.menuItemLyrics) {
                 startActivity(Intent(this, LyricsListActivity::class.java))
             }
             return@setNavigationItemSelectedListener false
@@ -147,22 +149,11 @@ class MainActivity : LyricsActivity() {
 
 
     private fun sendMediaEvent(keycode: Int) {
+        val systemService =
+            getActivityContext().getSystemService(Context.AUDIO_SERVICE) as AudioManager
         val eventTime = SystemClock.uptimeMillis()
-        val downIntent = Intent(Intent.ACTION_MEDIA_BUTTON, null)
-        val downEvent = KeyEvent(
-            eventTime, eventTime,
-            KeyEvent.ACTION_DOWN, keycode, 0
-        )
-        downIntent.putExtra(Intent.EXTRA_KEY_EVENT, downEvent)
-        sendOrderedBroadcast(downIntent, null)
-
-        val upIntent = Intent(Intent.ACTION_MEDIA_BUTTON, null)
-        val upEvent = KeyEvent(
-            eventTime, eventTime,
-            KeyEvent.ACTION_UP, keycode, 0
-        )
-        upIntent.putExtra(Intent.EXTRA_KEY_EVENT, upEvent)
-        sendOrderedBroadcast(upIntent, null)
+        systemService.dispatchMediaKeyEvent(KeyEvent(eventTime, eventTime, KeyEvent.ACTION_DOWN, keycode,0))
+        systemService.dispatchMediaKeyEvent(KeyEvent(eventTime, eventTime, KeyEvent.ACTION_UP, keycode,0))
     }
 
     fun playNextSong(view: View) {

@@ -50,7 +50,9 @@
         <androidx.core.widget.NestedScrollView
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:scrollIndicators="right"
+            android:scrollbars="vertical"
+            app:layout_constraintBottom_toTopOf="@id/navigationBar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/mainProgressBar">
@@ -79,40 +81,58 @@
         </androidx.core.widget.NestedScrollView>
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/navigationBar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
-            <androidx.appcompat.widget.AppCompatButton
+            <View
+                android:id="@+id/divider"
+                style="@style/Divider.Horizontal"
+                android:background="@color/colorAccent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/mainPrevBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/prev"
+                android:background="@null"
                 android:onClick="playPrevSong"
+                android:padding="8dp"
+                android:src="@android:drawable/ic_media_previous"
+                android:text="@string/prev"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/mainPauseBtn"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/mainPauseBtn"
                 android:layout_width="wrap_content"
-                android:onClick="pauseSong"
                 android:layout_height="wrap_content"
+                android:background="@null"
+                android:onClick="pauseSong"
+                android:padding="8dp"
+                android:src="@android:drawable/ic_media_play"
                 android:text="@string/pause"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/mainNextBtn"
                 app:layout_constraintStart_toEndOf="@id/mainPrevBtn"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/mainNextBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/next"
+                android:background="@null"
                 android:onClick="playNextSong"
+                android:padding="8dp"
+                android:src="@android:drawable/ic_media_next"
+                android:text="@string/next"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/mainPauseBtn"
