@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 
-class MainActivity : BaseActivity() {
+class MainActivity : LyricsActivity() {
 
     private val spotifyReceiver: SpotifyReceiver = SpotifyReceiver()
     private val lyricsDownloader: LyricsDownloader = LyricsDownloader()
@@ -45,7 +45,7 @@ class MainActivity : BaseActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private suspend fun saveSong(song: Song) {
+    private fun saveSong(song: Song) {
         val db = AppDatabase.getInstance(getActivityContext())
         val songDao = db.songDao()
         if (song.uid == 0) songDao.insertAll(song)
@@ -118,6 +118,8 @@ class MainActivity : BaseActivity() {
             if (it.itemId == R.id.menuItemThemes) {
                 drawer_layout_main.closeDrawers()
                 return@setNavigationItemSelectedListener true
+            } else if(it.itemId == R.id.menuItemLyrics) {
+                startActivity(Intent(this, LyricsListActivity::class.java))
             }
             return@setNavigationItemSelectedListener false
         }
