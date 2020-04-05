@@ -22,8 +22,10 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 
-class MainActivity : LyricsActivity() {
+class MainActivity : LyricsActivity(), SpotifyReceiver.PlaybackStateChangedCallback,
+    SpotifyReceiver.SongChangedCallback {
 
+    private var lastState: Boolean = false
     private val spotifyReceiver: SpotifyReceiver = SpotifyReceiver()
     private val lyricsDownloader: LyricsDownloader = LyricsDownloader()
     private var mSong: Song? = null
@@ -91,29 +93,8 @@ class MainActivity : LyricsActivity() {
         setSupportActionBar(mainActivityToolBar)
 
         mainProgressBar.post { mainProgressBar.show() }
-        spotifyReceiver.setSongChangedCallback(object :
-            SpotifyReceiver.SongChangedCallback {
-            override fun newTrack(artist: String, track: String) {
-                mainProgressBar.post { mainProgressBar.show() }
-                mSong = Song(0, artist, track, "")
-                setTitleSubTitle(track, artist)
-                mainLyricsTextView.post { mainLyricsTextView.text = "" }
-                lyricsDownloader.downloadLyrics(
-                    getActivityContext(),
-                    artist,
-                    track
-                ) { song, error ->
-                    mainProgressBar.post { mainProgressBar.hide() }
-                    mainLyricsTextView.post {
-                        if (error != null) mainLyricsTextView.text = error
-                        else {
-                            mainLyricsTextView.text = song?.lyrics
-                            mSong = song
-                        }
-                    }
-                }
-            }
-        })
+        spotifyReceiver.setPlaybackStateChangedCallback(this)
+        spotifyReceiver.setSongChangedCallback(this)
         setTitleSubTitle(getString(R.string.track), getString(R.string.artist))
 
         nav_view_main.setNavigationItemSelectedListener {
@@ -139,6 +120,7 @@ class MainActivity : LyricsActivity() {
 
         val intentFilter = IntentFilter()
         intentFilter.addAction("com.spotify.music.metadatachanged")
+        intentFilter.addAction("com.spotify.music.playbackstatechanged")
         registerReceiver(spotifyReceiver, intentFilter)
     }
 
@@ -152,8 +134,24 @@ class MainActivity : LyricsActivity() {
         val systemService =
             getActivityContext().getSystemService(Context.AUDIO_SERVICE) as AudioManager
         val eventTime = SystemClock.uptimeMillis()
-        systemService.dispatchMediaKeyEvent(KeyEvent(eventTime, eventTime, KeyEvent.ACTION_DOWN, keycode,0))
-        systemService.dispatchMediaKeyEvent(KeyEvent(eventTime, eventTime, KeyEvent.ACTION_UP, keycode,0))
+        systemService.dispatchMediaKeyEvent(
+            KeyEvent(
+                eventTime,
+                eventTime,
+                KeyEvent.ACTION_DOWN,
+                keycode,
+                0
+            )
+        )
+        systemService.dispatchMediaKeyEvent(
+            KeyEvent(
+                eventTime,
+                eventTime,
+                KeyEvent.ACTION_UP,
+                keycode,
+                0
+            )
+        )
     }
 
     fun playNextSong(view: View) {
@@ -166,5 +164,39 @@ class MainActivity : LyricsActivity() {
 
     fun pauseSong(view: View) {
         sendMediaEvent(KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE)
+    }
+
+    override fun stateChanged(isPlaying: Boolean) {
+        if (lastState != isPlaying) {
+            this.lastState = isPlaying
+            mainPauseBtn.post {
+                if (isPlaying) {
+                    mainPauseBtn.setImageResource(android.R.drawable.ic_media_pause)
+                } else {
+                    mainPauseBtn.setImageResource(android.R.drawable.ic_media_play)
+                }
+            }
+        }
+    }
+
+    override fun newTrack(artist: String, track: String) {
+        mainProgressBar.post { mainProgressBar.show() }
+        mSong = Song(0, artist, track, "")
+        setTitleSubTitle(track, artist)
+        mainLyricsTextView.post { mainLyricsTextView.text = "" }
+        lyricsDownloader.downloadLyrics(
+            getActivityContext(),
+            artist,
+            track
+        ) { song, error ->
+            mainProgressBar.post { mainProgressBar.hide() }
+            mainLyricsTextView.post {
+                if (error != null) mainLyricsTextView.text = error
+                else {
+                    mainLyricsTextView.text = song?.lyrics
+                    mSong = song
+                }
+            }
+        }
     }
 }
