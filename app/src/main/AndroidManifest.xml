@@ -9,14 +9,14 @@
         android:name=".AppLyricsGrabber"
         android:allowBackup="true"
         android:enabled="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/baseline_queue_music_white_48"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/baseline_queue_music_white_48"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-        <activity android:name=".activities.LyricsActivity"></activity>
+        <activity android:name=".activities.LyricsActivity" />
         <activity android:name=".activities.LyricsListActivity" />
         <activity
             android:name=".activities.ThemeSwitcherActivity"

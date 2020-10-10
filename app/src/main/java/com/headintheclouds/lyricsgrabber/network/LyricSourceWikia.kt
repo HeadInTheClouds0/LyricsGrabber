@@ -7,7 +7,7 @@ class LyricSourceWikia: LyricSourceBase() {
         get() = "http://lyrics.wikia.com/wiki/$artistPlaceHolder:$titlePlaceHolder"
 
     override fun getLyricsFromBody(body: Element): String {
-        val content = body?.getElementById("WikiaPage")
+        val content = body.getElementById("WikiaPage")
         val lyricBox = content?.getElementsByClass("lyricbox")?.first()
 
         return lyricBox.toString()

@@ -1,6 +1,5 @@
 package com.headintheclouds.lyricsgrabber.activities
 
-import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -11,16 +10,16 @@ import android.os.SystemClock
 import android.view.*
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
-import com.headintheclouds.lyricsgrabber.network.LyricsDownloader
 import com.headintheclouds.lyricsgrabber.R
 import com.headintheclouds.lyricsgrabber.helpers.setArtist
 import com.headintheclouds.lyricsgrabber.helpers.setTrack
 import com.headintheclouds.lyricsgrabber.models.AppDatabase
 import com.headintheclouds.lyricsgrabber.models.Song
+import com.headintheclouds.lyricsgrabber.network.LyricsDownloader
 import com.headintheclouds.lyricsgrabber.receivers.SpotifyReceiver
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 class MainActivity : LyricsActivity(), SpotifyReceiver.PlaybackStateChangedCallback,
     SpotifyReceiver.SongChangedCallback {
@@ -46,7 +45,7 @@ class MainActivity : LyricsActivity(), SpotifyReceiver.PlaybackStateChangedCallb
         } else if (item?.itemId == R.id.mainSearchButton && mSong != null) {
             launchBrowserWithSearch(mSong!!)
         }
-        return super.onOptionsItemSelected(item)
+        return super.onOptionsItemSelected(item!!)
     }
 
     private fun saveSong(song: Song) {
@@ -66,7 +65,7 @@ class MainActivity : LyricsActivity(), SpotifyReceiver.PlaybackStateChangedCallb
                     song.lyrics = taskEditText.text.toString()
                     mainLyricsTextView.text = song.lyrics
 
-                    GlobalScope.async {
+                    GlobalScope.launch {
                         saveSong(song)
                     }
                 }

@@ -7,10 +7,7 @@ import com.headintheclouds.lyricsgrabber.helpers.LyricsListViewAdapter
 import com.headintheclouds.lyricsgrabber.models.AppDatabase
 import com.headintheclouds.lyricsgrabber.models.Song
 import kotlinx.android.synthetic.main.activity_lyrics_list.*
-import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
+import kotlinx.coroutines.*
 
 class LyricsListActivity : BaseActivity() {
 
@@ -22,7 +19,7 @@ class LyricsListActivity : BaseActivity() {
         val songDao = db.songDao()
 
         val arrayList = ArrayList<Song>()
-        var i = 0
+//        var i = 0
 //        arrayList.add(Song(++i, "asd " + i, "dsa " + i, "asdasdasd " +i))
 //        arrayList.add(Song(++i, "asd " + i, "dsa " + i, "asdasdasd " +i))
 //        arrayList.add(Song(++i, "asd " + i, "dsa " + i, "asdasdasd " +i))
@@ -38,7 +35,7 @@ class LyricsListActivity : BaseActivity() {
 //        arrayList.add(Song(++i, "asd " + i, "dsa " + i, "asdasdasd " +i))
         LyricsListView.layoutManager = LinearLayoutManager(getActivityContext())
         LyricsListView.adapter = LyricsListViewAdapter(arrayList, getActivityContext())
-        async {
+        GlobalScope.launch {
             val songs = songDao.getAll()
             LyricsListView.adapter = LyricsListViewAdapter(songs, getActivityContext())
             (LyricsListView.adapter as LyricsListViewAdapter).notifyDataSetChanged()

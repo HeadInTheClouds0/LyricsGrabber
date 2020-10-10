@@ -32,9 +32,10 @@ class SpotifyReceiver : BroadcastReceiver() {
 //                with(NotificationManagerCompat.from(context)){
 //                    notify(0, builder.build() )
 //                }
+
                 songChangedCallback?.newTrack(
-                    intent.getStringExtra("artist"),
-                    intent.getStringExtra("track")
+                    intent.getStringExtra("artist")!!,
+                    intent.getStringExtra("track")!!
                 )
             }
         } else if (intent?.action == "com.spotify.music.playbackstatechanged") {

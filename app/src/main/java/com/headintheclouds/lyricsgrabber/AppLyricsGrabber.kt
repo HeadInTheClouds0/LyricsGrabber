@@ -5,16 +5,8 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
-import androidx.room.Room
-import com.headintheclouds.lyricsgrabber.models.AppDatabase
 
 class AppLyricsGrabber : Application() {
-    override fun onCreate() {
-        super.onCreate()
-//        createNotificationChannel()
-
-//        val database = Room.databaseBuilder(this, AppDatabase::class.java, "LyricsDB").build()
-    }
 
     companion object {
         const val CHANNEL_ID = "SpotifyReceiverChannelID"

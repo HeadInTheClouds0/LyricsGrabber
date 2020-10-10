@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
 import com.headintheclouds.lyricsgrabber.R
 import com.headintheclouds.lyricsgrabber.models.Song
@@ -30,5 +31,5 @@ class LyricsListViewAdapter(
 }
 
 class LyricsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-    val title = view.lyricListItemName
+    val title: AppCompatTextView = view.lyricListItemName
 }
