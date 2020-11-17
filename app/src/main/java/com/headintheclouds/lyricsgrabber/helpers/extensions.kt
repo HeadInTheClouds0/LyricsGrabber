@@ -12,4 +12,5 @@ fun String.removeSigns(): String =
         .replace(".", "")
         .replace(",", "")
         .replace("#", "")
+        .replace("'", "")
 

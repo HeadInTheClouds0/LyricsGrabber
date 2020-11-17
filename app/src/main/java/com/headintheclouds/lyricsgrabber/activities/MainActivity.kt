@@ -188,6 +188,7 @@ class MainActivity : LyricsActivity(), SpotifyReceiver.PlaybackStateChangedCallb
             artist,
             track
         ) { song, error ->
+            if (song != null && mSong?.artist != song?.artist && mSong?.track != song?.track) return@downloadLyrics
             mainProgressBar.post { mainProgressBar.hide() }
             mainLyricsTextView.post {
                 if (error != null) mainLyricsTextView.text = error
