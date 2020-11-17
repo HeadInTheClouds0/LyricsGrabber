@@ -192,8 +192,10 @@ class MainActivity : LyricsActivity(), SpotifyReceiver.PlaybackStateChangedCallb
             mainLyricsTextView.post {
                 if (error != null) mainLyricsTextView.text = error
                 else {
-                    mainLyricsTextView.text = song?.lyrics
-                    mSong = song
+                    if (song != null) {
+                        mainLyricsTextView.text = song?.lyrics
+                        mSong = song
+                    }
                 }
             }
         }

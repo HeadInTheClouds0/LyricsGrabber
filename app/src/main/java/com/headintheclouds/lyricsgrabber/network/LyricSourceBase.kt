@@ -13,6 +13,8 @@ abstract class LyricSourceBase {
     }
     abstract val sourceUrl: String
 
+    abstract fun sourceURLFor(artist: String, track: String): String
+
     private val years: MutableList<Int> = mutableListOf()
 
     init {
@@ -23,7 +25,8 @@ abstract class LyricSourceBase {
 
     fun downloadLyrics(songTitle: String, songArtist: String): String {
         val connect =
-            Jsoup.connect(sourceUrl.setArtist(songArtist).setTrack(cleanTrackName(songTitle)))
+            Jsoup.connect(sourceURLFor(songArtist, songTitle))
+//                sourceUrl.setArtist(songArtist).setTrack(cleanTrackName(songTitle)))
         val doc = connect.get()
         val body = doc.body()
         var lyricsRes = getLyricsFromBody(body)

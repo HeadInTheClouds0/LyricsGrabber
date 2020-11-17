@@ -16,7 +16,8 @@ class LyricsDownloader {
     private val backgroundHandler: Handler
 
     private val lyricSources: MutableList<LyricSourceBase> = mutableListOf(
-        LyricSourceWikia()
+        LyricSourceWikia(),
+        LyricSourceAZLyrics()
     )
 
     private val years: MutableList<Int> = mutableListOf()
@@ -56,6 +57,7 @@ class LyricsDownloader {
                                 song!!.lyrics = lyrics
                                 songDao.update(song!!)
                             }
+                            return@forEach
                         }
                     } catch (e:Exception) {
                         errorString = e.toString()

@@ -6,3 +6,10 @@ fun String.setArtist(artist: String): String =  this.replace(LyricSourceBase.art
 fun String.setTrack(track: String): String =  this.replace(LyricSourceBase.titlePlaceHolder, track)
 fun String.replaceBreaks(): String =  this.replace("<br>", System.getProperty("line.separator")!!)
 
+fun String.removeSpace(): String =  this.replace(" ", "")
+fun String.removeSigns(): String =
+    this.replace("!", "")
+        .replace(".", "")
+        .replace(",", "")
+        .replace("#", "")
+
